@@ -115,4 +115,4 @@ ldlogger_64.so: $(LDLOGGER_LIB_SOURCES) $(LDLOGGER_LIB_HEADERS)
 	$(CC) -m64 $(CPPFLAGS) $(LIB_CFLAGS) $(LIB_LDFLAGS) $(LDLOGGER_LIB_SOURCES) $(LDLOGGER_SOURCES) -o $@
 
 test:
-	test/test_logger.sh $(BUILD_DIR)
+	test/test_logger.py $(BUILD_DIR)
