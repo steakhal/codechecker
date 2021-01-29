@@ -252,7 +252,7 @@ int isObjectFile(const char* filename_)
  */
 char* getResponseFile(const LoggerVector* arguments_)
 {
-  int i;
+  size_t i;
 
   for (i = 0; i < arguments_->size; ++i)
   {
@@ -428,10 +428,10 @@ int loggerGccParserCollectActions(
       char* ext = loggerGetFileExt(current, 1);
       if (ext)
       {
-        int i;
-        for (i = 0; srcExts[i]; ++i)
+        int j;
+        for (j = 0; srcExts[j]; ++j)
         {
-          if (strcmp(srcExts[i], ext) == 0)
+          if (strcmp(srcExts[j], ext) == 0)
           {
             char newPath[PATH_MAX];
 
@@ -546,7 +546,7 @@ int loggerGccParserCollectActions(
   {
     loggerVectorAdd(actions_, action);
   }
-  else if (responseFile = getResponseFile(&action->arguments))
+  else if ((responseFile = getResponseFile(&action->arguments)))
   {
     LOG_INFO("Processing response file: %s", responseFile);
     loggerVectorAdd(&action->sources, responseFile);
@@ -554,7 +554,7 @@ int loggerGccParserCollectActions(
   }
   else
   {
-    LOG_WARN("No souce file was found.");
+    LOG_WARN("No source file was found.");
   }
 
   return 1;

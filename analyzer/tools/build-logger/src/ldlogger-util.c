@@ -18,7 +18,6 @@
 #include <stdio.h>
 #include <sys/file.h>
 #include <sys/stat.h>
-#include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -67,9 +66,9 @@ static char* makePathAbsRec(const char* path_, char* resolved_)
  * Returns formatted current time.
  *
  * @param buff_ an output buffer (non null).
- * @return anways returns buff_.
+ * @return always returns buff_.
  */
-static void getCurrentTime(char* buff_)
+static char *getCurrentTime(char* buff_)
 {
   time_t rawtime;
   struct tm* timeinfo;
@@ -541,7 +540,7 @@ void logPrint(char* logLevel_, char* fileName_, int line_, char *fmt_,...)
   const char* debugFile = getenv("CC_LOGGER_DEBUG_FILE");
   if (!debugFile)
   {
-    return 0;
+    return;
   }
 
   int lockFd;
@@ -551,14 +550,14 @@ void logPrint(char* logLevel_, char* fileName_, int line_, char *fmt_,...)
   lockFd = aquireLock(debugFile);
   if (lockFd == -1)
   {
-    return -5;
+    return;
   }
 
   logFd = open(debugFile, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
   if (logFd == -1)
   {
     freeLock(lockFd);
-    return -7;
+    return;
   }
 
   stream = fdopen(logFd, "a");
@@ -566,7 +565,7 @@ void logPrint(char* logLevel_, char* fileName_, int line_, char *fmt_,...)
   {
     close(logFd);
     freeLock(lockFd);
-    return -9;
+    return;
   }
 
   char currentTime[26];
@@ -577,7 +576,7 @@ void logPrint(char* logLevel_, char* fileName_, int line_, char *fmt_,...)
 
   char* p, *str, **items;
   int num;
-  size_t i;
+  int i;
 
   va_list args;
   va_start(args, fmt_);
